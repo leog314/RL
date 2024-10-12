@@ -21,7 +21,7 @@ class Env:
         return f.interpolate(full_inf_state, self.img_shape).squeeze_(0)
 
     def oobs_to_tensor(self, obs) -> torch.Tensor:
-        return torch.Tensor([obs]).unsqueeze(0)
+        return torch.Tensor(np.array(obs)).unsqueeze(0)
 
     def start_mdp(self):
         init_obs = self.env.reset()
