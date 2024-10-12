@@ -19,11 +19,43 @@ class Memory:
             return False
         return random.sample(self.mem, self.batch_size)
 
+class odN(nn.Module):
+    def __init__(self, state_shape: int, action_shape: int):
+        super().__init__()
+        self.net = nn.Sequential(
+            nn.Linear(state_shape, 8),
+            nn.SiLU(),
+            nn.Linear(8, action_shape)
+        )
+
+    def forward(self, x_in: torch.Tensor):
+        return self.net(x_in)
+
+class tdN(nn.Module):
+    def __init__(self, state_shape: tuple, action_shape: int):
+        super().__init__()
+        self.net = nn.Sequential(
+            nn.Conv2d(state_shape[0], 16, 5, bias=False),
+            nn.BatchNorm2d(16),
+            nn.MaxPool2d(3),
+            nn.SiLU(),
+            nn.Conv2d(16, 4, 3, bias=False),
+            nn.BatchNorm2d(4),
+            nn.MaxPool2d(3),
+            nn.SiLU(),
+            nn.Flatten(),
+            nn.Linear(256, 64),
+            nn.SiLU(),
+            nn.Linear(64, action_shape)
+        )
+
+    def forward(self, x_in: torch.Tensor):
+        return self.net(x_in)
+
 class Agent(nn.Module):
-    def __init__(self, obs_shape: torch.Tensor | tuple, action_shape: torch.Tensor | int,
-                 main_network: nn.Module | None = None, target_network: nn.Module | None = None,
-                 mem_size: int = 16384, batch_size: int = 32, gamma: float = 0.995, eps_start: float = 1,
-                 eps_end: float = 0.07, steps: int = 8*10**4, optimizer: torch.optim.Optimizer | None = None, learning_rate: float = 0.00075,
+    def __init__(self, obs_shape: torch.Tensor | tuple | int, action_shape: torch.Tensor | int,
+                 mem_size: int = 32768, batch_size: int = 32, gamma: float = 0.999, eps_start: float = 1,
+                 eps_end: float = 0.05, steps: int = 100, optimizer: torch.optim.Optimizer | None = None, learning_rate: float = 0.001,
                  loss: nn.modules.loss.Module | None = None, device: str = "cpu"): # mem_size: choose large size, but not too large, such that it would use swap
 
         super().__init__()
@@ -31,34 +63,8 @@ class Agent(nn.Module):
         self.obs_shape = obs_shape
         self.action_space = action_shape
 
-        self.main_network = main_network if main_network is not None else nn.Sequential(
-            nn.Conv2d(obs_shape[0], 16, 5, bias=False),
-            nn.BatchNorm2d(16),
-            nn.MaxPool2d(3),
-            nn.SiLU(),
-            nn.Conv2d(16, 4, 3, bias=False),
-            nn.BatchNorm2d(4),
-            nn.MaxPool2d(3),
-            nn.SiLU(),
-            nn.Flatten(),
-            nn.Linear(256, 64),
-            nn.SiLU(),
-            nn.Linear(64, action_shape)
-        )
-        self.target_network = target_network if target_network is not None else nn.Sequential(
-            nn.Conv2d(obs_shape[0], 16, 5, bias=False),
-            nn.BatchNorm2d(16),
-            nn.MaxPool2d(3),
-            nn.SiLU(),
-            nn.Conv2d(16, 4, 3, bias=False),
-            nn.BatchNorm2d(4),
-            nn.MaxPool2d(3),
-            nn.SiLU(),
-            nn.Flatten(),
-            nn.Linear(256, 64),
-            nn.SiLU(),
-            nn.Linear(64, action_shape)
-        )
+        self.main_network = odN(obs_shape, action_shape) if isinstance(obs_shape, int) else tdN(obs_shape, action_shape)
+        self.target_network = odN(obs_shape, action_shape) if isinstance(obs_shape, int) else tdN(obs_shape, action_shape)
         self.replay_buffer = Memory(mem_size, batch_size)
 
         self.batch_size = batch_size

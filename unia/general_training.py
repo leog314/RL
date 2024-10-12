@@ -1,15 +1,11 @@
-import warnings
-
-import torch
-
 from unia.general_agent import *
 from env import *
 from logging_init import *
 
 action_space = 4
-state_shape = (4, 84, 84)
+state_shape = 1
 
-build = "ALE/Breakout-v5"
+build = "CliffWalking-v0"
 logger.info(f"Using gym-environment: {build}")
 device = "cuda" if torch.cuda.is_available() else "cpu"
 logger.info(f"Detected device: {device}")
@@ -19,12 +15,12 @@ if device == "cpu":
     logger.info(f"Using {threads_num} cpu threads")
 
 epochs = 100000
-env = Env(build, image_shape=(state_shape[1:]))
+env = Env(build, state_shape=state_shape)
 agent = Agent(state_shape, action_space, device=device)
 logger.info(f"Architecture: {agent.main_network}")
 
-agent.main_network = torch.load("breakout.pt")
-agent.target_network = torch.load("breakout.pt")
+# agent.main_network = torch.load("breakout.pt")
+# agent.target_network = torch.load("breakout.pt")
 
 for epoch in range(epochs):
     average_loss = 0
@@ -49,8 +45,7 @@ for epoch in range(epochs):
         average_loss += loss
         average_rew += float(rew.clone())
         steps += 1
+        print(rew, agent.decay)
 
     print(f"Average loss in epoch {epoch}: {average_loss/steps}... and average reward in this epoch: {average_rew/steps}, {agent.decay}")
-    torch.save(agent.main_network, "breakout.pt")
-
-
+    torch.save(agent.main_network, "backgammon_transfer.pt")

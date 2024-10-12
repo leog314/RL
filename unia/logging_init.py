@@ -23,7 +23,7 @@ class CustomFormatter(logging.Formatter):
         return formatter.format(record)
 
 # create logger with 'spam_application'
-logger = logging.getLogger("My_app")
+logger = logging.getLogger("RL-Agent")
 logger.setLevel(logging.DEBUG)
 
 # create console handler with a higher log level
