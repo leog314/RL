@@ -32,12 +32,13 @@ class Env:
             init_state = rgb_to_grayscale(self.tobs_to_tensor(init_obs[0]))
             self.state_hyst = [torch.zeros(tuple(init_state.shape)) for _ in range(self.state_hy_size-1)] + [init_state]
             res = torch.cat(self.state_hyst)
-        else:
-            res = self.oobs_to_tensor(init_obs[0])
 
-        self.shape = res.shape
+            self.shape = res.shape
+            return res.unsqueeze(0)
 
-        return res.unsqueeze(0) if not self.linear else res
+        res = self.oobs_to_tensor(init_obs[0])
+        self.shape = int(res.shape[-1])
+        return res
 
     def step(self, action: int):
         obs, rew, done, _, _ = self.env.step(action)

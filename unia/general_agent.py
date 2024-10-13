@@ -56,8 +56,8 @@ class tdN(nn.Module):
 
 class Agent(nn.Module):
     def __init__(self, obs_shape: torch.Tensor | tuple | int, action_shape: torch.Tensor | int,
-                 mem_size: int = 32768, batch_size: int = 8, gamma: float = 0.9, eps_start: float = 1,
-                 eps_end: float = 0.05, steps: int = 10000, optimizer: torch.optim.Optimizer | None = None, learning_rate: float = 0.05,
+                 mem_size: int = 32768, batch_size: int = 32, gamma: float = 0.999, eps_start: float = 1,
+                 eps_end: float = 0.05, steps: int = 5000, optimizer: torch.optim.Optimizer | None = None, learning_rate: float = 0.001,
                  loss: nn.modules.loss.Module | None = None, device: str = "cpu"): # mem_size: choose large size, but not too large, such that it would use swap
 
         super().__init__()
