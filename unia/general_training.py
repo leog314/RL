@@ -2,18 +2,18 @@ from unia.general_agent import *
 from env import *
 from logging_init import *
 import time as t
+import ale_py
 
-action_space = 4
-state_shape = 8 # can be image (tupel) or int
+action_space = 6
+state_shape = (4, 84, 84) # can be image (tupel) or int
 max_time_steps = 2000 # if unnecessary, set it to a high value
-update_freq = 10 # define target-network update frequency
+update_freq = 20 # define target-network update frequency
 
-build = ("LunarLander-v3")
+build = "ALE/Pong-v5"
 logger.info(f"Using gym-environment: {build}")
 device = "cuda" if torch.cuda.is_available() else "cpu"
 logger.info(f"Detected device: {device}")
 t.sleep(1)
-# usability
 
 if device == "cpu":
     threads_num = int(input(f"Enter number of threads (available: {torch.get_num_threads()}): "))
@@ -55,4 +55,4 @@ for epoch in range(epochs):
         average_rew += float(rew.clone())
 
     print(f"Average loss in epoch {epoch}: {average_loss/step}... and average reward in this epoch: {average_rew/step}, {agent.decay}... Got it for {step} steps")
-    torch.save(agent.main_network, "lunar.pt")
+    torch.save(agent.main_network, "pong.pt")

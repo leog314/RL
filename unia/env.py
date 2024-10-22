@@ -8,13 +8,13 @@ import matplotlib.pyplot as plt
 
 class Env:
     def __init__(self, build: str, state_hst_size: int = 4, state_shape: tuple | torch.Tensor | int = (4, 84, 84)):
-        self.env = gym.make(build, render_mode = "human")
-
+        self.env = gym.make(build, render_mode = "human", continuous=False)
+        print(self.env.action_space)
         self.linear = True if isinstance(state_shape, int) else False
         self.shape = ()
         self.state_hy_size = state_hst_size if not self.linear else None
         self.state_hyst = []
-        self.img_shape = state_shape[:-1] if not self.linear else None
+        self.img_shape = state_shape[1:] if not self.linear else None
 
     def tobs_to_tensor(self, obs) -> torch.Tensor:
         full_inf_state = torch.Tensor(np.array(obs)/127.5-1.).permute((2, 1, 0)).unsqueeze(0)

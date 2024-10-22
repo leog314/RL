@@ -23,11 +23,13 @@ class odN(nn.Module):
     def __init__(self, state_shape: int, action_shape: int):
         super().__init__()
         self.net = nn.Sequential(
-            nn.Linear(state_shape, 12),
+            nn.Linear(state_shape, 128),
             nn.SiLU(),
-            nn.Linear(12, 12),
+            nn.Linear(128, 128),
             nn.SiLU(),
-            nn.Linear(12, action_shape)
+            nn.Linear(128, 64),
+            nn.SiLU(),
+            nn.Linear(64, action_shape)
         )
 
     def forward(self, x_in: torch.Tensor):
@@ -56,8 +58,8 @@ class tdN(nn.Module):
 
 class Agent(nn.Module):
     def __init__(self, obs_shape: torch.Tensor | tuple | int, action_shape: torch.Tensor | int,
-                 mem_size: int = 32768, batch_size: int = 32, gamma: float = 0.999, eps_start: float = 1,
-                 eps_end: float = 0.05, steps: int = 5000, optimizer: torch.optim.Optimizer | None = None, learning_rate: float = 0.001,
+                 mem_size: int = 32768, batch_size: int = 32, gamma: float = 0.99, eps_start: float = 1,
+                 eps_end: float = 0.05, steps: int = 5*10**4, optimizer: torch.optim.Optimizer | None = None, learning_rate: float = 0.0005,
                  loss: nn.modules.loss.Module | None = None, device: str = "cpu"): # mem_size: choose large size, but not too large, such that it would use swap
 
         super().__init__()
