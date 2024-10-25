@@ -1,7 +1,6 @@
-Requirements:
+Requirements:  
   Python (<=3.11)
-  
-necessary libraries:
+  to install all needed libraries run:
 
     pip install torch torchvision gymnasium matplotlib numpy
     
