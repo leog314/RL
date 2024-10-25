@@ -1,5 +1,5 @@
 Requirements:  
-  Python (<=3.11)
+    Python (<=3.11)
   
   to install all needed libraries run:
 
