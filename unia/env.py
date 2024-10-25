@@ -50,5 +50,3 @@ class Env:
             return torch.cat(self.state_hyst).unsqueeze(0), torch.Tensor([float(rew)]), done
 
         return self.oobs_to_tensor(obs), torch.Tensor([float(rew)]), done
-
-

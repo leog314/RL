@@ -43,14 +43,15 @@ class tdN(nn.Module):
             nn.BatchNorm2d(16),
             nn.MaxPool2d(3),
             nn.SiLU(),
-            nn.Conv2d(16, 4, 3, bias=False),
-            nn.BatchNorm2d(4),
-            nn.MaxPool2d(3),
+            nn.Conv2d(16, 1, 5, bias=False),
+            nn.BatchNorm2d(1),
             nn.SiLU(),
             nn.Flatten(),
-            nn.Linear(256, 64),
+            nn.Linear(169, 64),
             nn.SiLU(),
-            nn.Linear(64, action_shape)
+            nn.Linear(64, 24),
+            nn.SiLU(),
+            nn.Linear(24, action_shape)
         )
 
     def forward(self, x_in: torch.Tensor):
@@ -58,8 +59,8 @@ class tdN(nn.Module):
 
 class Agent(nn.Module):
     def __init__(self, obs_shape: torch.Tensor | tuple | int, action_shape: torch.Tensor | int,
-                 mem_size: int = 32768, batch_size: int = 32, gamma: float = 0.99, eps_start: float = 1,
-                 eps_end: float = 0.05, steps: int = 5*10**4, optimizer: torch.optim.Optimizer | None = None, learning_rate: float = 0.0005,
+                 mem_size: int = 32768, batch_size: int = 32, gamma: float = 0.999, eps_start: float = 1,
+                 eps_end: float = 0.05, steps: int = 2*10**5, optimizer: torch.optim.Optimizer | None = None, learning_rate: float = 0.0001,
                  loss: nn.modules.loss.Module | None = None, device: str = "cpu"): # mem_size: choose large size, but not too large, such that it would use swap
 
         super().__init__()

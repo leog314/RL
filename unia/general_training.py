@@ -1,3 +1,5 @@
+import matplotlib.pyplot as plt
+
 from unia.general_agent import *
 from env import *
 from logging_init import *
@@ -5,7 +7,7 @@ import time as t
 import ale_py
 
 action_space = 6
-state_shape = (4, 84, 84) # can be image (tupel) or int
+state_shape = (4, 56, 56) # can be image (tupel) or int
 max_time_steps = 2000 # if unnecessary, set it to a high value
 update_freq = 20 # define target-network update frequency
 
