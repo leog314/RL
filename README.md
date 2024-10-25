@@ -9,6 +9,8 @@ to install all needed libraries run:
   Because of this, you propably need to install additional packages like (for Box2d):
   
     pip install swig
-    pip install gymnasium[box2d]
+    pip install "gymnasium[box2d]"
 
   Needed packages are listed at the specific websites of the environments (see also: https://gymnasium.farama.org/)
+
+Notice that the installation of the packages may be different on Windows. It was so far tested on Linux Mint.
