@@ -2,8 +2,9 @@ Requirements:
   Python (<=3.11)
   
 necessary libraries:
-  pip install torch torchvision gymnasium matplotlib numpy
 
+    pip install torch torchvision gymnasium matplotlib numpy
+    
   Also you'll need some gymnasium-environments to test the algorithm on, for example the Box2d-env (https://gymnasium.farama.org/environments/box2d/).
   Because of this, you propably need to install additional packages like (for Box2d):
   
