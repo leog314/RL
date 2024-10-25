@@ -13,4 +13,4 @@ to install all needed libraries run:
 
   Needed packages are listed at the specific websites of the environments (see also: https://gymnasium.farama.org/)
 
-Notice that the installation of the packages may be different on Windows. It was so far tested on Linux Mint.
+Notice that the installation of the packages may be different on Windows. It was so far only tested on Linux Mint.
